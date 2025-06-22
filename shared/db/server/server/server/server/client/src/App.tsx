@@ -1,15 +1,14 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
 import { Switch, Route } from "wouter";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/hooks/use-auth";
-import { ProtectedRoute } from "@/lib/protected-route";
-import HomePage from "@/pages/HomePage";
-import AuthPage from "@/pages/AuthPage";
+import { Toaster } from "@/components/ui/toaster";
+import HomePage from "@/pages/home-page";
+import AuthPage from "@/pages/auth-page";
 import DashboardPage from "@/pages/DashboardPage";
-import SchoolsPage from "@/pages/SchoolsPage";
-import BookingsPage from "@/pages/BookingsPage";
-import ProfilePage from "@/pages/ProfilePage";
-import NotFound from "@/pages/NotFound";
+import SchoolsPage from "@/pages/schools-page";
+import BookingsPage from "@/pages/bookings-page";
+import NotFound from "@/pages/not-found";
+import { ProtectedRoute } from "@/lib/protected-route";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,28 +19,21 @@ const queryClient = new QueryClient({
   },
 });
 
-function Router() {
-  return (
-    <Switch>
-      <Route path="/" component={HomePage} />
-      <Route path="/auth" component={AuthPage} />
-      <ProtectedRoute path="/dashboard" component={DashboardPage} />
-      <ProtectedRoute path="/schools" component={SchoolsPage} />
-      <ProtectedRoute path="/bookings" component={BookingsPage} />
-      <ProtectedRoute path="/profile" component={ProfilePage} />
-      <Route component={NotFound} />
-    </Switch>
-  );
-}
-
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <div className="min-h-screen bg-background">
-          <Router />
-          <Toaster />
+        <div className="min-h-screen bg-gray-50">
+          <Switch>
+            <Route path="/" component={HomePage} />
+            <Route path="/auth" component={AuthPage} />
+            <ProtectedRoute path="/dashboard" component={DashboardPage} />
+            <Route path="/schools" component={SchoolsPage} />
+            <ProtectedRoute path="/bookings" component={BookingsPage} />
+            <Route component={NotFound} />
+          </Switch>
         </div>
+        <Toaster />
       </AuthProvider>
     </QueryClientProvider>
   );
