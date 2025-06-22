@@ -28,7 +28,7 @@ export default function HomePage() {
     },
     {
       icon: Users,
-      title: "Qualified Instructors",
+      title: "Qualified Instructors", 
       description: "Learn from experienced, certified driving instructors"
     },
     {
@@ -112,73 +112,4 @@ export default function HomePage() {
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
               />
             </div>
-            <Button
-              onClick={handleSearch}
-              size="lg"
-              className="px-8 py-3"
-            >
-              <Search className="h-5 w-5 mr-2" />
-              Find Schools
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600">50+</div>
-              <div className="text-gray-600">Verified Schools</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600">200+</div>
-              <div className="text-gray-600">Certified Instructors</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600">1000+</div>
-              <div className="text-gray-600">Happy Students</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Us</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              We connect you with the best driving schools and make learning to drive simple and stress-free.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="text-center border-0 shadow-md hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <feature.icon className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                  <CardTitle className="text-lg">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-sm">
-                    {feature.description}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Popular Services</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              From learner's license to advanced driving skills, find the right service for your needs.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {services.map((service, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="text-lg">{service.name}</CardTitle>
-                  <div className="flex items-center justify-between">
-                    <Badge variant="secondary" className="flex
+            <Button onClick={handleSearch} size
