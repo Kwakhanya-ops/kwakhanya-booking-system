@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,7 +8,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Car, User, School, ArrowLeft } from "lucide-react";
-import { Link } from "wouter";
 
 export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
@@ -22,7 +21,6 @@ export default function AuthPage() {
     role: "student"
   });
 
-  // Redirect if already logged in
   if (user) {
     setLocation("/");
     return null;
@@ -41,7 +39,6 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="w-full max-w-6xl flex">
-        {/* Left side - Hero */}
         <div className="hidden lg:flex lg:w-1/2 bg-blue-600 rounded-l-2xl p-12 flex-col justify-center text-white">
           <div className="mb-8">
             <Car className="h-16 w-16 mb-6" />
@@ -75,7 +72,6 @@ export default function AuthPage() {
           </div>
         </div>
 
-        {/* Right side - Auth Forms */}
         <div className="w-full lg:w-1/2 bg-white rounded-r-2xl lg:rounded-l-none rounded-2xl p-8 lg:p-12">
           <div className="mb-8">
             <Link href="/">
@@ -92,7 +88,6 @@ export default function AuthPage() {
               <TabsTrigger value="register">Sign Up</TabsTrigger>
             </TabsList>
 
-            {/* Login Tab */}
             <TabsContent value="login">
               <Card className="border-0 shadow-none">
                 <CardHeader className="px-0">
@@ -139,7 +134,6 @@ export default function AuthPage() {
               </Card>
             </TabsContent>
 
-            {/* Register Tab */}
             <TabsContent value="register">
               <Card className="border-0 shadow-none">
                 <CardHeader className="px-0">
@@ -232,4 +226,4 @@ export default function AuthPage() {
       </div>
     </div>
   );
-}
+                }
