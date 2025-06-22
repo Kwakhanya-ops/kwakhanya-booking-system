@@ -1,179 +1,184 @@
+import { useState } from "react";
+import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link, useLocation } from "wouter";
-import { Car, Users, BookOpen, Shield, Star, MapPin, Phone, Mail } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Search, MapPin, Clock, Users, Shield, Car } from "lucide-react";
 
 export default function HomePage() {
-  const { user } = useAuth();
+  const { user, logoutMutation } = useAuth();
   const [, setLocation] = useLocation();
+  const [searchLocation, setSearchLocation] = useState("");
 
-  const handleGetStarted = () => {
-    if (user) {
-      setLocation("/dashboard");
+  const handleSearch = () => {
+    if (searchLocation.trim()) {
+      setLocation(`/schools?location=${encodeURIComponent(searchLocation)}`);
     } else {
-      setLocation("/auth");
+      setLocation("/schools");
     }
   };
 
+  const features = [
+    {
+      icon: Shield,
+      title: "Verified Schools",
+      description: "All driving schools are verified for quality and safety standards"
+    },
+    {
+      icon: Users,
+      title: "Qualified Instructors",
+      description: "Learn from experienced, certified driving instructors"
+    },
+    {
+      icon: Car,
+      title: "Modern Vehicles",
+      description: "Practice with well-maintained, modern training vehicles"
+    },
+    {
+      icon: Clock,
+      title: "Flexible Scheduling",
+      description: "Book lessons at times that work for your schedule"
+    }
+  ];
+
+  const services = [
+    { name: "Learner's License", duration: "2-3 hours", price: "From R350" },
+    { name: "Driving Lessons", duration: "1 hour", price: "From R200" },
+    { name: "Defensive Driving", duration: "4 hours", price: "From R800" },
+    { name: "License Test Preparation", duration: "2 hours", price: "From R400" }
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
-      {/* Navigation */}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <nav className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Car className="h-8 w-8 text-blue-600 mr-2" />
               <span className="text-xl font-bold text-gray-900">Kwakhanya Drivers</span>
             </div>
             <div className="flex items-center space-x-4">
+              <Link href="/schools">
+                <Button variant="ghost">Find Schools</Button>
+              </Link>
               {user ? (
                 <>
-                  <span className="text-gray-700">Welcome, {user.fullName}</span>
-                  <Link href="/dashboard">
-                    <Button variant="outline">Dashboard</Button>
+                  <Link href="/bookings">
+                    <Button variant="ghost">My Bookings</Button>
                   </Link>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-600">Welcome, {user.fullName}</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => logoutMutation.mutate()}
+                      disabled={logoutMutation.isPending}
+                    >
+                      Logout
+                    </Button>
+                  </div>
                 </>
               ) : (
-                <>
-                  <Link href="/auth">
-                    <Button variant="outline">Sign In</Button>
-                  </Link>
-                  <Link href="/auth">
-                    <Button>Get Started</Button>
-                  </Link>
-                </>
+                <Link href="/auth">
+                  <Button>Sign In</Button>
+                </Link>
               )}
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
       <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Learn to Drive with
-              <span className="text-blue-600 block">Confidence</span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Connect with certified driving schools across South Africa. Book lessons, 
-              track your progress, and get your license with the best instructors in your area.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" onClick={handleGetStarted} className="text-lg px-8 py-3">
-                Start Learning Today
-              </Button>
-              <Link href="/schools">
-                <Button variant="outline" size="lg" className="text-lg px-8 py-3">
-                  Find Driving Schools
-                </Button>
-              </Link>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-5xl font-bold text-gray-900 mb-6">
+            Learn to Drive with
+            <span className="text-blue-600 block">Confidence</span>
+          </h1>
+          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            Connect with verified driving schools across South Africa. 
+            Book lessons, track your progress, and get your license with expert guidance.
+          </p>
+          
+          <div className="max-w-2xl mx-auto flex flex-col sm:flex-row gap-4 mb-12">
+            <div className="relative flex-1">
+              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <Input
+                placeholder="Enter your location (e.g., Cape Town, Johannesburg)"
+                value={searchLocation}
+                onChange={(e) => setSearchLocation(e.target.value)}
+                className="pl-10 py-3 text-lg"
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              />
+            </div>
+            <Button
+              onClick={handleSearch}
+              size="lg"
+              className="px-8 py-3"
+            >
+              <Search className="h-5 w-5 mr-2" />
+              Find Schools
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-600">50+</div>
+              <div className="text-gray-600">Verified Schools</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-600">200+</div>
+              <div className="text-gray-600">Certified Instructors</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-600">1000+</div>
+              <div className="text-gray-600">Happy Students</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-white">
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Why Choose Kwakhanya Drivers?
-            </h2>
-            <p className="text-lg text-gray-600">
-              Everything you need for a successful driving education journey
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Us</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              We connect you with the best driving schools and make learning to drive simple and stress-free.
             </p>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="text-center">
-              <CardHeader>
-                <Shield className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                <CardTitle>Certified Schools</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  All driving schools are verified and certified by relevant authorities
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center">
-              <CardHeader>
-                <Users className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                <CardTitle>Expert Instructors</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Learn from experienced, professional driving instructors
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center">
-              <CardHeader>
-                <BookOpen className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                <CardTitle>Progress Tracking</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Monitor your learning progress and skill development
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center">
-              <CardHeader>
-                <Star className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                <CardTitle>Reviews & Ratings</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Choose the best schools based on real student reviews
-                </CardDescription>
-              </CardContent>
-            </Card>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.map((feature, index) => (
+              <Card key={index} className="text-center border-0 shadow-md hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <feature.icon className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                  <CardTitle className="text-lg">{feature.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-sm">
+                    {feature.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              How It Works
-            </h2>
-            <p className="text-lg text-gray-600">
-              Get started in just a few simple steps
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Popular Services</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              From learner's license to advanced driving skills, find the right service for your needs.
             </p>
           </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                1
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Find a School</h3>
-              <p className="text-gray-600">
-                Search for driving schools in your area and compare their services
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                2
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Book a Lesson</h3>
-              <p className="text-gray-600">
-                Choose your preferred time and book your driving lesson online
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="bg-blue-600 text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                3
-              </div>
-              <h3 className="text-xl font-semibold mb-2">
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {services.map((service, index) => (
+              <Card key={index} className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="text-lg">{service.name}</CardTitle>
+                  <div className="flex items-center justify-between">
+                    <Badge variant="secondary" className="flex
