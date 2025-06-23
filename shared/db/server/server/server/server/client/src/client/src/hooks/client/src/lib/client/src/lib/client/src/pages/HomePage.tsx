@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
@@ -112,4 +112,28 @@ export default function HomePage() {
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
               />
             </div>
-            <Button onClick={handleSearch} size
+            <Button onClick={handleSearch} size="lg" className="px-8 py-3">
+              <Search className="h-5 w-5 mr-2" />
+              Find Schools
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+            {features.map((feature, index) => (
+              <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <feature.icon className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                  <CardTitle className="text-lg">{feature.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-xl p-8 mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8">Popular Services</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {services.map((service, index) => (
+                <Card key={index} className="hover:shadow-lg transition-shadow">
