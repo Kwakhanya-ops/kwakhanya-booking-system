@@ -28,7 +28,7 @@ export default function HomePage() {
     },
     {
       icon: Users,
-      title: "Qualified Instructors", 
+      title: "Qualified Instructors",
       description: "Learn from experienced, certified driving instructors"
     },
     {
@@ -97,10 +97,10 @@ export default function HomePage() {
             <span className="text-blue-600 block">Confidence</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Connect with verified driving schools across South Africa. 
+            Connect with verified driving schools across South Africa.
             Book lessons, track your progress, and get your license with expert guidance.
           </p>
-          
+
           <div className="max-w-2xl mx-auto flex flex-col sm:flex-row gap-4 mb-12">
             <div className="relative flex-1">
               <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
@@ -137,3 +137,23 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {services.map((service, index) => (
                 <Card key={index} className="hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="text-lg">{service.name}</CardTitle>
+                    <CardDescription>{service.duration}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-blue-600 font-bold">{service.price}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          <p className="text-gray-600 text-sm">
+            &copy; {new Date().getFullYear()} Kwakhanya Drivers. All rights reserved.
+          </p>
+        </div>
+      </section>
+    </div>
+  );
+}
