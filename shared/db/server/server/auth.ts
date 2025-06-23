@@ -142,4 +142,4 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
     return next();
   }
   res.status(401).json({ error: "Authentication required" });
-}
+    }
