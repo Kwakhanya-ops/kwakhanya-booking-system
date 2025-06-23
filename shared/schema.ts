@@ -166,7 +166,7 @@ export type Booking = {
 
 export type InsertBooking = z.infer<typeof bookingsInsertSchema>;
 
-// Instructors table
+// Additional tables for progress tracking
 export const instructors = pgTable('instructors', {
   id: serial('id').primaryKey(),
   schoolId: integer('school_id').references(() => drivingSchools.id).notNull(),
@@ -180,7 +180,6 @@ export const instructors = pgTable('instructors', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-// Vehicles table
 export const vehicles = pgTable('vehicles', {
   id: serial('id').primaryKey(),
   schoolId: integer('school_id').references(() => drivingSchools.id).notNull(),
@@ -188,14 +187,13 @@ export const vehicles = pgTable('vehicles', {
   model: text('model').notNull(),
   year: integer('year'),
   plateNumber: text('plate_number').notNull(),
-  transmission: text('transmission').notNull(), // automatic, manual
+  transmission: text('transmission').notNull(),
   photoUrl: text('photo_url'),
   registrationDocUrl: text('registration_doc_url'),
   isActive: boolean('is_active').default(true),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-// Student profiles table
 export const studentProfiles = pgTable('student_profiles', {
   id: serial('id').primaryKey(),
   userId: integer('user_id').references(() => users.id).notNull(),
@@ -211,7 +209,6 @@ export const studentProfiles = pgTable('student_profiles', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-// Lessons table
 export const lessons = pgTable('lessons', {
   id: serial('id').primaryKey(),
   studentId: integer('student_id').references(() => studentProfiles.id).notNull(),
@@ -219,34 +216,20 @@ export const lessons = pgTable('lessons', {
   instructorId: integer('instructor_id').references(() => instructors.id).notNull(),
   vehicleId: integer('vehicle_id').references(() => vehicles.id),
   lessonDate: timestamp('lesson_date').notNull(),
-  duration: integer('duration').notNull(), // in minutes
-  status: text('status').notNull().default('scheduled'), // scheduled, completed, cancelled
+  duration: integer('duration').notNull(),
+  status: text('status').notNull().default('scheduled'),
   instructorNotes: text('instructor_notes'),
   studentNotes: text('student_notes'),
-  skillsAssessed: text('skills_assessed'), // JSON array of skill names
+  skillsAssessed: text('skills_assessed'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-// Instructor-Student Assignments table
-export const instructorStudentAssignments = pgTable('instructor_student_assignments', {
-  id: serial('id').primaryKey(),
-  schoolId: integer('school_id').references(() => drivingSchools.id).notNull(),
-  instructorId: integer('instructor_id').references(() => instructors.id).notNull(),
-  studentId: integer('student_id').references(() => studentProfiles.id).notNull(),
-  assignedDate: timestamp('assigned_date').defaultNow().notNull(),
-  assignedBy: integer('assigned_by').references(() => users.id).notNull(),
-  isActive: boolean('is_active').default(true).notNull(),
-  notes: text('notes'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-});
-
-// Assessments table
 export const assessments = pgTable('assessments', {
   id: serial('id').primaryKey(),
   studentId: integer('student_id').references(() => studentProfiles.id).notNull(),
   instructorId: integer('instructor_id').references(() => instructors.id).notNull(),
   assessmentDate: timestamp('assessment_date').notNull(),
-  assessmentType: text('assessment_type').notNull(), // practical, theory, final
+  assessmentType: text('assessment_type').notNull(),
   overallScore: integer('overall_score'),
   maxScore: integer('max_score').default(100),
   passed: boolean('passed').default(false),
@@ -254,40 +237,15 @@ export const assessments = pgTable('assessments', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-// Skill Evaluations table
 export const skillEvaluations = pgTable('skill_evaluations', {
   id: serial('id').primaryKey(),
   lessonId: integer('lesson_id').references(() => lessons.id).notNull(),
   skillName: text('skill_name').notNull(),
-  rating: integer('rating').notNull(), // 1-5 scale
+  rating: integer('rating').notNull(),
   notes: text('notes'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-// Success Stories table
-export const successStories = pgTable('success_stories', {
-  id: serial('id').primaryKey(),
-  userId: integer('user_id').references(() => users.id).notNull(),
-  schoolId: integer('school_id').references(() => drivingSchools.id).notNull(),
-  title: text('title').notNull(),
-  content: text('content').notNull(),
-  rating: integer('rating').notNull(), // 1-5 scale
-  approved: boolean('approved').default(false),
-  featured: boolean('featured').default(false),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-});
-
-// Password reset tokens table
-export const passwordResetTokens = pgTable('password_reset_tokens', {
-  id: serial('id').primaryKey(),
-  userId: integer('user_id').references(() => users.id).notNull(),
-  token: text('token').notNull().unique(),
-  expiresAt: timestamp('expires_at').notNull(),
-  used: boolean('used').default(false),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-});
-
-// Registration tokens table
 export const registrationTokens = pgTable('registration_tokens', {
   id: serial('id').primaryKey(),
   bookingId: integer('booking_id').references(() => bookings.id).notNull(),
@@ -297,7 +255,6 @@ export const registrationTokens = pgTable('registration_tokens', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-// System settings table
 export const systemSettings = pgTable('system_settings', {
   id: serial('id').primaryKey(),
   key: text('key').notNull().unique(),
@@ -316,16 +273,10 @@ export const studentProfilesInsertSchema = createInsertSchema(studentProfiles);
 export const studentProfilesSelectSchema = createSelectSchema(studentProfiles);
 export const lessonsInsertSchema = createInsertSchema(lessons);
 export const lessonsSelectSchema = createSelectSchema(lessons);
-export const instructorStudentAssignmentsInsertSchema = createInsertSchema(instructorStudentAssignments);
-export const instructorStudentAssignmentsSelectSchema = createSelectSchema(instructorStudentAssignments);
 export const assessmentsInsertSchema = createInsertSchema(assessments);
 export const assessmentsSelectSchema = createSelectSchema(assessments);
 export const skillEvaluationsInsertSchema = createInsertSchema(skillEvaluations);
 export const skillEvaluationsSelectSchema = createSelectSchema(skillEvaluations);
-export const successStoriesInsertSchema = createInsertSchema(successStories);
-export const successStoriesSelectSchema = createSelectSchema(successStories);
-export const passwordResetTokensInsertSchema = createInsertSchema(passwordResetTokens);
-export const passwordResetTokensSelectSchema = createSelectSchema(passwordResetTokens);
 export const registrationTokensInsertSchema = createInsertSchema(registrationTokens);
 export const registrationTokensSelectSchema = createSelectSchema(registrationTokens);
 export const systemSettingsInsertSchema = createInsertSchema(systemSettings);
@@ -340,15 +291,12 @@ export type StudentProfile = z.infer<typeof studentProfilesSelectSchema>;
 export type InsertStudentProfile = z.infer<typeof studentProfilesInsertSchema>;
 export type Lesson = z.infer<typeof lessonsSelectSchema>;
 export type InsertLesson = z.infer<typeof lessonsInsertSchema>;
-export type InstructorStudentAssignment = z.infer<typeof instructorStudentAssignmentsSelectSchema>;
-export type InsertInstructorStudentAssignment = z.infer<typeof instructorStudentAssignmentsInsertSchema>;
 export type Assessment = z.infer<typeof assessmentsSelectSchema>;
 export type InsertAssessment = z.infer<typeof assessmentsInsertSchema>;
 export type SkillEvaluation = z.infer<typeof skillEvaluationsSelectSchema>;
 export type InsertSkillEvaluation = z.infer<typeof skillEvaluationsInsertSchema>;
 
-// Export additional schemas for compatibility
-// Search criteria schema for school filtering
+// Search criteria schema
 export const searchCriteriaSchema = z.object({
   location: z.string().optional(),
   serviceType: z.string().optional(),
@@ -363,13 +311,3 @@ export const insertBookingSchema = bookingsInsertSchema;
 export const insertUserSchema = usersInsertSchema;
 export const insertDrivingSchoolSchema = drivingSchoolsInsertSchema;
 export const insertServiceSchema = servicesInsertSchema;
-export const insertInstructorSchema = instructorsInsertSchema;
-export const insertVehicleSchema = vehiclesInsertSchema;
-export const insertStudentProfileSchema = studentProfilesInsertSchema;
-export const insertLessonSchema = lessonsInsertSchema;
-export const insertInstructorStudentAssignmentSchema = instructorStudentAssignmentsInsertSchema;
-export const insertAssessmentSchema = assessmentsInsertSchema;
-export const insertSkillEvaluationSchema = skillEvaluationsInsertSchema;
-export const insertSuccessStorySchema = successStoriesInsertSchema;
-export const insertPasswordResetTokenSchema = passwordResetTokensInsertSchema;
-export const insertRegistrationTokenSchema = registrationTokensInsertSchema;
